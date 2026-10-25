@@ -20,7 +20,7 @@ export function ProfileEditor({ home, onChange }: { home: OwnedHome; onChange: (
           description: String(f.get("description")).trim(),
         });
       }}
-      className="max-w-2xl rounded-3xl border border-cream-200 bg-white p-6 shadow-soft sm:p-8"
+      className="max-w-2xl rounded-xl border border-cream-200 bg-card p-6 shadow-soft sm:p-8"
     >
       <div className="grid gap-5">
         <div className="grid gap-5 sm:grid-cols-2">

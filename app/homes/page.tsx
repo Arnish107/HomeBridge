@@ -22,7 +22,7 @@ export default async function BrowseHomesPage({ searchParams }: { searchParams: 
     <div className="container pt-10 md:pt-16">
       <Reveal className="max-w-2xl">
         <p className="eyebrow">Browse homes</p>
-        <h1 className="mt-3 text-4xl font-bold tracking-tightest sm:text-5xl lg:text-6xl">Find a home to help</h1>
+        <h1 className="display mt-5 text-[clamp(3.2rem,8vw,7.5rem)]">Find a home to help</h1>
         <p className="mt-5 text-lg text-navy-600">
           Every home here has been verified by our team. Filter by what you can give, or search for a home near you.
         </p>

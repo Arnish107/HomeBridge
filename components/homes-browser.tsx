@@ -90,13 +90,13 @@ export function HomesBrowser({ homes, initialCategory = "all" }: { homes: Foster
             <motion.span
               layout
               transition={{ type: "spring", stiffness: 500, damping: 32 }}
-              className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow ${urgentOnly ? "right-0.5" : "left-0.5"}`}
+              className={`absolute top-0.5 h-5 w-5 rounded-full bg-card shadow ${urgentOnly ? "right-0.5" : "left-0.5"}`}
             />
           </button>
         </label>
       </div>
 
-      <motion.div layout className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <motion.div layout className="mt-10 grid gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
         <AnimatePresence mode="popLayout">
           {results.map((home) => (
             <motion.div

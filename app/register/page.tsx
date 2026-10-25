@@ -82,7 +82,7 @@ export default function RegisterPage() {
         </FormSuccess>
       ) : (
         <>
-          <h2 className="text-2xl font-bold">Registration request</h2>
+          <h2 className="font-serif text-[2.6rem] font-normal leading-none">Registration request</h2>
           <p className="mt-1 text-sm text-navy-500">
             Your phone number, email, and license number are only seen by our review team.
           </p>

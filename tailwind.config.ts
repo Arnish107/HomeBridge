@@ -7,33 +7,52 @@ const config: Config = {
   theme: {
     container: {
       center: true,
-      padding: { DEFAULT: "1.25rem", sm: "1.5rem", lg: "2rem" },
-      screens: { "2xl": "1240px" },
+      padding: { DEFAULT: "1.25rem", sm: "2rem", lg: "3rem" },
+      screens: { "2xl": "1440px" },
     },
     extend: {
       fontFamily: {
         sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
+        serif: ["var(--font-serif)", "ui-serif", "Georgia", "serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
       },
       colors: {
         // Brand scales
+        // Ink: navy-black type and deep navy panels. Body copy sits at 600–700.
         navy: {
-          50: "#F2F4F8",
-          100: "#E2E7F0",
-          200: "#C5CEDF",
-          300: "#97A6C2",
-          400: "#64799F",
-          500: "#435982",
-          600: "#32466B",
-          700: "#263859",
+          50: "#F1F2F5",
+          100: "#E0E3EA",
+          200: "#C2C7D3",
+          300: "#9198AA",
+          400: "#62697D",
+          500: "#4F576C",
+          600: "#3A4257",
+          700: "#283046",
           800: "#1B2A4A",
-          900: "#131E36",
-          950: "#0B1222",
+          900: "#131A2B",
+          950: "#0B1020",
         },
+        // Paper: warm ivory surfaces.
         cream: {
-          DEFAULT: "#F9F7F4",
-          100: "#F4F1EC",
-          200: "#ECE7DF",
-          300: "#DED6CA",
+          DEFAULT: "#F4EFE4",
+          100: "#EFE9DC",
+          200: "#E5DDCB",
+          300: "#D3C8B2",
+        },
+        ink: "#131A2B",
+        paper: "#F4EFE4",
+        // Amber: fills at 400–500, readable text on paper at 700–800.
+        amber: {
+          50: "#FBF4E4",
+          100: "#F6E6C3",
+          200: "#F0D396",
+          300: "#EBBE66",
+          400: "#EDAE4C",
+          500: "#E8A33D",
+          600: "#C9861E",
+          700: "#995B00",
+          800: "#7A4700",
+          900: "#5A3500",
         },
         // shadcn tokens
         border: "hsl(var(--border))",
@@ -76,9 +95,10 @@ const config: Config = {
         sm: "calc(var(--radius) - 8px)",
       },
       boxShadow: {
-        soft: "0 1px 2px rgba(27,42,74,0.04), 0 6px 20px -10px rgba(27,42,74,0.14)",
-        lift: "0 2px 4px rgba(27,42,74,0.05), 0 22px 44px -18px rgba(27,42,74,0.28)",
-        glow: "0 10px 30px -10px rgba(245,158,11,0.55)",
+        // Restrained: hairlines do the structural work, shadows only lift what floats.
+        soft: "0 1px 0 rgba(19,26,43,0.04)",
+        lift: "0 30px 60px -40px rgba(19,26,43,0.45)",
+        glow: "0 0 0 1px rgba(232,163,61,0.6)",
       },
       letterSpacing: {
         tightest: "-0.035em",

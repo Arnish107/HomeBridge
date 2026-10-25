@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getHome } from "@/lib/homes";
 import { categoryLabel } from "@/lib/types";
 import { FlyerQR, PrintButton } from "@/components/flyer-qr";
+import { LogoMark } from "@/components/layout/logo";
 
 // Always render fresh so a foster home's dashboard edits show up immediately.
 export const dynamic = "force-dynamic";
@@ -40,15 +41,16 @@ export default async function FlyerPage({ params }: { params: Promise<{ id: stri
       </div>
 
       {/* Printable sheet */}
-      <article className="mx-auto flex aspect-[8.5/11] w-full max-w-[680px] flex-col overflow-hidden rounded-3xl border border-cream-200 bg-white shadow-lift print:max-w-none print:rounded-none print:border-0 print:shadow-none">
+      <article className="mx-auto flex aspect-[8.5/11] w-full max-w-[680px] flex-col overflow-hidden rounded-xl border border-cream-200 bg-card shadow-lift print:max-w-none print:rounded-none print:border-0 print:shadow-none">
         <div className="bg-navy-800 px-8 pb-10 pt-8 text-cream sm:px-12">
-          <p className="font-bold">
-            Home<span className="text-amber-400">Bridge</span>
+          <p className="flex items-end gap-2 font-serif text-2xl leading-none">
+            <LogoMark light className="mb-1" />
+            HomeBridge
           </p>
-          <p className="mt-10 text-sm font-semibold uppercase tracking-[0.18em] text-amber-400">
+          <p className="mt-10 font-mono text-xs uppercase tracking-[0.14em] text-amber-400">
             Neighbors helping neighbors
           </p>
-          <h1 className="mt-2 text-4xl font-bold leading-tight text-cream sm:text-5xl">Help {home.name}</h1>
+          <h1 className="mt-2 font-serif text-[3.6rem] font-normal leading-[0.92] text-cream sm:text-[4.6rem]">Help {home.name}</h1>
           <p className="mt-3 text-navy-200">A local foster home in {home.area}</p>
         </div>
 
@@ -81,7 +83,7 @@ export default async function FlyerPage({ params }: { params: Promise<{ id: stri
             )}
           </div>
 
-          <div className="flex flex-col items-center justify-center rounded-2xl bg-cream-100 p-5 sm:self-start">
+          <div className="flex flex-col items-center justify-center rounded-xl bg-cream-100 p-5 sm:self-start">
             <FlyerQR path={`/homes/${home.id}`} size={170} />
             <p className="mt-3 text-center text-sm font-semibold text-navy-800">Scan to give or volunteer</p>
           </div>

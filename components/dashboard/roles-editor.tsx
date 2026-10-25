@@ -80,7 +80,7 @@ export function RolesEditor({ home, onChange }: { home: OwnedHome; onChange: (ne
           });
           form.reset();
         }}
-        className="h-fit rounded-3xl border border-cream-200 bg-white p-6 shadow-soft lg:sticky lg:top-24"
+        className="h-fit rounded-xl border border-cream-200 bg-card p-6 shadow-soft lg:sticky lg:top-24"
       >
         <h2 className="font-semibold">Post a volunteer role</h2>
         <div className="mt-4 grid gap-4">

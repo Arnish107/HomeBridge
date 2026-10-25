@@ -64,7 +64,7 @@ export function HoursLog({ homes }: { homes: string[] }) {
     <div className="grid gap-10 lg:grid-cols-[360px_1fr] lg:gap-12">
       {/* Entry form */}
       <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start print:hidden">
-        <div className="rounded-3xl border border-cream-200 bg-white p-6 shadow-soft">
+        <div className="rounded-xl border border-cream-200 bg-card p-6 shadow-soft">
           <h2 className="font-semibold">Your details</h2>
           <div className="mt-4 grid gap-4">
             <div className="grid gap-2">
@@ -90,7 +90,7 @@ export function HoursLog({ homes }: { homes: string[] }) {
           </div>
         </div>
 
-        <form onSubmit={addEntry} className="rounded-3xl border border-cream-200 bg-white p-6 shadow-soft">
+        <form onSubmit={addEntry} className="rounded-xl border border-cream-200 bg-card p-6 shadow-soft">
           <h2 className="font-semibold">Log a session</h2>
           <div className="mt-4 grid gap-4">
             <div className="grid grid-cols-[1fr_96px] gap-3">
@@ -108,7 +108,7 @@ export function HoursLog({ homes }: { homes: string[] }) {
               <select
                 id="h-home"
                 name="home"
-                className="h-11 w-full rounded-xl border border-input bg-white px-3 text-sm text-navy-800 focus-visible:border-amber-500 focus-visible:ring-4 focus-visible:ring-amber-500/15 focus-visible:ring-offset-0"
+                className="h-11 w-full rounded-xl border border-input bg-card px-3 text-sm text-navy-800 focus-visible:border-amber-500 focus-visible:ring-4 focus-visible:ring-amber-500/15 focus-visible:ring-offset-0"
               >
                 {homes.map((h) => (
                   <option key={h}>{h}</option>
@@ -138,22 +138,20 @@ export function HoursLog({ homes }: { homes: string[] }) {
           </Button>
         </div>
 
-        <div className="rounded-3xl border border-cream-200 bg-white p-6 shadow-soft sm:p-10 print:rounded-none print:border-0 print:p-0 print:shadow-none">
+        <div className="rounded-xl border border-cream-200 bg-card p-6 shadow-soft sm:p-10 print:rounded-none print:border-0 print:p-0 print:shadow-none">
           <div className="flex items-start justify-between gap-6 border-b border-cream-200 pb-6">
             <div>
-              <div className="flex items-center gap-2">
-                <LogoMark className="h-7 w-7" />
-                <span className="font-bold text-navy-800">
-                  Home<span className="text-amber-500">Bridge</span>
-                </span>
+              <div className="flex items-end gap-2">
+                <LogoMark />
+                <span className="font-serif text-2xl leading-none text-navy-900">HomeBridge</span>
               </div>
-              <h2 className="mt-5 text-2xl font-bold">Community Service Hours Log</h2>
+              <h2 className="mt-5 font-serif text-4xl font-normal leading-none">Community Service Hours Log</h2>
               <p className="mt-1 text-sm text-navy-500">
                 {state.volunteer || "Volunteer name"}
                 {state.school && ` · ${state.school}`}
               </p>
             </div>
-            <div className="rounded-2xl bg-navy-800 px-5 py-4 text-right text-cream print:bg-white print:text-navy-800 print:ring-1 print:ring-navy-200">
+            <div className="rounded-xl bg-navy-800 px-5 py-4 text-right text-cream print:bg-card print:text-navy-800 print:ring-1 print:ring-navy-200">
               <p className="text-xs text-navy-300 print:text-navy-500">Total hours</p>
               <p className="text-3xl font-bold tabular-nums">{total % 1 ? total.toFixed(2) : total}</p>
             </div>

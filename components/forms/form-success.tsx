@@ -16,7 +16,7 @@ export function FormSuccess({ title, body, children }: { title: string; body: st
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
         className="h-1 w-12 origin-left rounded-full bg-amber-500"
       />
-      <h3 className="mt-5 text-2xl font-bold">{title}</h3>
+      <h3 className="mt-5 font-serif text-4xl font-normal leading-none">{title}</h3>
       <p className="mt-2 max-w-sm text-sm text-navy-600">{body}</p>
       {children && <div className="mt-6">{children}</div>}
     </motion.div>

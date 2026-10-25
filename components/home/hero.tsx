@@ -1,116 +1,108 @@
 "use client";
 
+import { useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { gsap, useGSAP, MOTION_OK } from "@/lib/gsap";
 import { Button } from "@/components/ui/button";
-import type { FosterHome } from "@/lib/types";
+import { unsplash } from "@/components/home-photo";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+interface HeroProps {
+  photo?: { url: string; alt: string };
+  openNeeds: number;
+  urgentNeeds: number;
+  homeCount: number;
+  roleCount: number;
+}
 
-const rise = (delay: number) => ({
-  initial: { opacity: 0, y: 24 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.8, ease: EASE, delay },
-});
+/** One headline line inside a clipping mask, so it can rise into view. */
+function Line({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return (
+    <span className="-mb-[0.14em] block overflow-hidden pb-[0.14em]">
+      <span className={`hb-line block will-change-transform ${className}`}>{children}</span>
+    </span>
+  );
+}
 
-export function Hero({ homes }: { homes: FosterHome[] }) {
-  const open = homes.flatMap((h) => h.needs.filter((n) => !n.fulfilled).map((need) => ({ home: h, need })));
-  const urgent = open.filter((x) => x.need.urgent);
-  // Show urgent needs first, then fill the list from other homes.
-  const list = [...urgent, ...open.filter((x) => !x.need.urgent)].slice(0, 4);
+export function Hero({ photo, openNeeds, urgentNeeds, homeCount, roleCount }: HeroProps) {
+  const root = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      root.current?.classList.add("is-ready");
+      const mm = gsap.matchMedia();
+      mm.add(MOTION_OK, () => {
+        const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
+        tl.from(".hb-line", { yPercent: 105, duration: 1.3, stagger: 0.12 })
+          // The window into the home opens from its centre once the words have settled.
+          .from(".hb-window", { clipPath: "inset(0% 50% 0% 50% round 999px)", duration: 1.1, ease: "power3.inOut" }, 0.55)
+          .from(".hb-window img", { scale: 1.35, duration: 1.6 }, 0.55)
+          .from(".hb-after", { autoAlpha: 0, y: 16, duration: 0.9, stagger: 0.08 }, 0.9);
+      });
+      return () => mm.revert();
+    },
+    { scope: root }
+  );
 
   return (
-    <section className="relative">
-      <div className="container grid items-center gap-14 pb-20 pt-10 md:pt-16 lg:grid-cols-[1.1fr_1fr] lg:gap-16 lg:pb-28">
-        <div className="max-w-xl">
-          <motion.p {...rise(0)} className="eyebrow">
-            Foster care support in North Metro Atlanta
-          </motion.p>
+    <section ref={root} data-reveal className="relative overflow-hidden pt-10 md:pt-14">
+      <div className="container">
+        <p className="hb-after eyebrow">Foster homes in North Metro Atlanta</p>
 
-          <motion.h1
-            {...rise(0.08)}
-            className="mt-5 text-[2.6rem] font-bold leading-[1.04] tracking-tightest sm:text-6xl lg:text-[4.1rem]"
-          >
-            Every kid deserves to feel{" "}
-            <span className="underline decoration-amber-500 decoration-[0.09em] underline-offset-[0.14em]">
-              at home.
+        <h1 className="display mt-8 text-[clamp(3.4rem,11vw,12.25rem)] md:mt-10">
+          <Line>A little help.</Line>
+          <Line className="pl-[6vw] md:pl-[9vw]">
+            A place
+            <span
+              aria-hidden
+              className="hb-window relative mx-[0.12em] inline-block h-[0.72em] w-[1.5em] translate-y-[0.04em] overflow-hidden rounded-full bg-cream-200 align-baseline"
+            >
+              {photo && (
+                <Image
+                  src={unsplash(photo.url, 900)}
+                  alt=""
+                  fill
+                  unoptimized
+                  priority
+                  sizes="30vw"
+                  className="object-cover"
+                />
+              )}
             </span>
-          </motion.h1>
+            to
+          </Line>
+          <Line className="pl-[1vw] md:pl-[27vw]">call home.</Line>
+        </h1>
 
-          <motion.p {...rise(0.16)} className="mt-7 text-lg leading-relaxed text-navy-600">
-            HomeBridge connects local foster homes with neighbors who want to help. See exactly what a home needs,
-            send it straight from their wish list, or give an afternoon of your time.
-          </motion.p>
-
-          <motion.div {...rise(0.24)} className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <Button asChild variant="accent" size="lg">
-              <Link href="/homes">Browse homes</Link>
+        <div className="mt-14 grid border-t border-navy-900/15 md:mt-20 md:grid-cols-12">
+          <p className="hb-after py-7 text-lg leading-relaxed text-navy-700 md:col-span-5 md:pr-10">
+            HomeBridge shows you what foster homes near you are short on this week, from winter coats to a homework
+            helper on Tuesdays, and lets you give it directly.
+          </p>
+          <div className="hb-after flex flex-wrap items-start gap-3 border-navy-900/15 py-7 md:col-span-4 md:border-l md:px-10">
+            <Button asChild size="lg">
+              <Link href="/homes">Find a home to help</Link>
             </Button>
-            <Button asChild variant="outline" size="lg">
-              <Link href="/volunteer">Volunteer your time</Link>
+            <Button asChild size="lg" variant="outline">
+              <Link href="/volunteer">See volunteer roles</Link>
             </Button>
-          </motion.div>
-
-          <motion.p {...rise(0.32)} className="mt-10 text-sm text-navy-500">
-            Every home is verified · Shown by city, never by address
-          </motion.p>
-        </div>
-
-        {/* A live look at what homes need, straight from the data */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: EASE, delay: 0.15 }}
-          className="w-full rounded-[2rem] bg-navy-800 p-7 text-cream shadow-lift sm:p-9"
-        >
-          <div className="flex items-end justify-between gap-4 border-b border-white/10 pb-6">
-            <div>
-              <p className="text-sm text-navy-300">Open needs right now</p>
-              <p className="mt-1 text-6xl font-bold tracking-tightest">{open.length}</p>
-            </div>
-            <p className="pb-2 text-right text-sm text-navy-300">
-              across {homes.length}
-              <br />
-              local homes
-            </p>
           </div>
-
-          <ul className="divide-y divide-white/10">
-            {list.map(({ home, need }, i) => (
-              <motion.li
-                key={`${home.id}-${need.id}`}
-                initial={{ opacity: 0, x: 12 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, ease: EASE, delay: 0.45 + i * 0.08 }}
-              >
-                <Link
-                  href={`/homes/${home.id}`}
-                  className="group flex items-center justify-between gap-4 py-4 transition-colors"
-                >
-                  <div className="min-w-0">
-                    <p className="truncate font-medium text-cream group-hover:text-amber-300">{need.title}</p>
-                    <p className="truncate text-sm text-navy-300">
-                      {home.name}, {home.area}
-                    </p>
-                  </div>
-                  {need.urgent ? (
-                    <span className="shrink-0 rounded-full bg-amber-500 px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-navy-900">
-                      Urgent
-                    </span>
-                  ) : (
-                    <span className="shrink-0 text-sm text-navy-400 transition-transform group-hover:translate-x-1 group-hover:text-cream">
-                      →
-                    </span>
-                  )}
-                </Link>
-              </motion.li>
+          <dl className="hb-after grid grid-cols-3 gap-4 border-t border-navy-900/15 py-7 md:col-span-3 md:border-l md:border-t-0 md:pl-10">
+            {[
+              { k: "open needs", v: openNeeds },
+              { k: "urgent", v: urgentNeeds },
+              { k: roleCount === 1 ? "role" : "roles", v: roleCount },
+            ].map((s) => (
+              <div key={s.k}>
+                <dd className="font-serif text-5xl leading-none text-navy-900">{s.v}</dd>
+                <dt className="mt-2 font-mono text-[0.68rem] uppercase tracking-[0.1em] text-navy-500">{s.k}</dt>
+              </div>
             ))}
-          </ul>
-
-          <Link href="/homes" className="mt-2 inline-block text-sm font-semibold text-amber-400 hover:text-amber-300">
-            See every need →
-          </Link>
-        </motion.div>
+            <p className="col-span-3 text-xs text-navy-500">
+              Live across {homeCount} verified homes.
+            </p>
+          </dl>
+        </div>
       </div>
     </section>
   );

@@ -18,7 +18,7 @@ export default async function NearMePage() {
     <div className="container pt-10 md:pt-16">
       <Reveal className="max-w-2xl">
         <p className="eyebrow">Find near me</p>
-        <h1 className="mt-3 text-4xl font-bold tracking-tightest sm:text-5xl lg:text-6xl">Homes close to you</h1>
+        <h1 className="display mt-5 text-[clamp(3.2rem,8vw,7.5rem)]">Homes close to you</h1>
         <p className="mt-5 text-lg text-navy-600">
           Enter a ZIP code or city to see foster homes in your area. Helping close to home makes it easier to show
           up.

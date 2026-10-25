@@ -149,12 +149,12 @@ export function NearMe({ homes }: { homes: FosterHome[] }) {
                   exit={{ opacity: 0 }}
                   onMouseEnter={() => setActiveId(home.id)}
                   className={cn(
-                    "-mx-4 rounded-2xl px-4 py-5 transition-colors",
-                    activeId === home.id && "bg-white shadow-soft"
+                    "-mx-4 rounded-xl px-4 py-5 transition-colors",
+                    activeId === home.id && "bg-card shadow-soft"
                   )}
                 >
                   <div className="flex items-baseline justify-between gap-4">
-                    <Link href={`/homes/${home.id}`} className="text-lg font-semibold hover:underline">
+                    <Link href={`/homes/${home.id}`} className="font-serif text-[2rem] font-normal leading-none hover:underline">
                       {home.name}
                     </Link>
                     {dist !== null && (
@@ -179,7 +179,7 @@ export function NearMe({ homes }: { homes: FosterHome[] }) {
       <div className="order-1 lg:order-2">
         <div
           data-lenis-prevent
-          className="relative z-0 h-72 overflow-hidden rounded-3xl border border-cream-200 shadow-soft sm:h-96 lg:sticky lg:top-24 lg:h-[calc(100vh-8rem)]"
+          className="relative z-0 h-72 overflow-hidden rounded-xl border border-cream-200 shadow-soft sm:h-96 lg:sticky lg:top-24 lg:h-[calc(100vh-8rem)]"
         >
           <HomesMap homes={results.map((r) => r.home)} activeId={activeId} onSelect={setActiveId} />
         </div>

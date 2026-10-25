@@ -93,13 +93,13 @@ export function VolunteerBoard({ homes }: { homes: FosterHome[] }) {
                 className="grid gap-3 py-6 sm:grid-cols-[170px_1fr_auto] sm:items-center sm:gap-6"
               >
                 <div>
-                  <p className="text-sm font-semibold text-amber-700">{opp.schedule}</p>
+                  <p className="font-mono text-xs uppercase tracking-[0.08em] text-amber-700">{opp.schedule}</p>
                   <p className="mt-0.5 text-xs uppercase tracking-wider text-navy-400">
                     {OPP_CATEGORIES.find((c) => c.value === opp.category)?.label}
                   </p>
                 </div>
                 <div className="min-w-0">
-                  <h3 className="text-lg font-semibold">{opp.title}</h3>
+                  <h3 className="font-serif text-[1.9rem] font-normal leading-none">{opp.title}</h3>
                   <p className="mt-0.5 text-sm text-navy-500">{opp.description}</p>
                   <Link
                     href={`/homes/${home.id}`}
@@ -126,7 +126,7 @@ export function VolunteerBoard({ homes }: { homes: FosterHome[] }) {
 
       {/* Hours tracker */}
       <aside className="lg:sticky lg:top-24 lg:self-start">
-        <div className="rounded-3xl bg-navy-800 p-7 text-cream shadow-lift">
+        <div className="rounded-xl bg-navy-800 p-7 text-cream shadow-lift">
           <p className="eyebrow text-amber-400">Your service hours</p>
           <p className="mt-4 text-6xl font-bold tracking-tightest tabular-nums">
             {logged ? (logged.total % 1 ? logged.total.toFixed(2) : logged.total) : "–"}

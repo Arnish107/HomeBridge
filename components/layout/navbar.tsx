@@ -4,14 +4,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
 import { Logo } from "./logo";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/use-auth";
 
 const LINKS = [
-  { href: "/homes", label: "Browse homes" },
+  { href: "/homes", label: "Homes" },
   { href: "/volunteer", label: "Volunteer" },
   { href: "/near-me", label: "Near me" },
 ];
@@ -25,10 +23,10 @@ export function Navbar() {
   const { user, isAdmin } = useAuth();
   const account = user
     ? { href: isAdmin ? "/admin" : "/dashboard", label: isAdmin ? "Admin" : "Dashboard" }
-    : { href: "/login", label: "Foster home login" };
+    : { href: "/login", label: "Log in" };
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -39,93 +37,88 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 print:hidden transition-[background-color,box-shadow,border-color] duration-300",
-        scrolled || open
-          ? "border-b border-cream-200/80 bg-cream/80 backdrop-blur-xl"
-          : "border-b border-transparent bg-transparent"
+        "sticky top-0 z-50 border-b transition-colors duration-300 print:hidden",
+        scrolled || open ? "border-navy-900/10 bg-cream/90 backdrop-blur-md" : "border-transparent bg-cream"
       )}
     >
-      <nav className="container flex h-[72px] items-center justify-between">
+      <nav className="container flex h-[68px] items-center justify-between gap-6">
         <Logo />
 
-        <ul className="hidden items-center gap-1 rounded-full border border-navy-800/[0.06] bg-white/60 p-1 backdrop-blur md:flex">
+        <ul className="hidden items-center gap-9 md:flex">
           {LINKS.map((l) => (
-            <li key={l.href} className="relative">
-              {isActive(l.href) && (
-                <motion.span
-                  layoutId="nav-pill"
-                  className="absolute inset-0 rounded-full bg-navy-800"
-                  transition={{ type: "spring", stiffness: 420, damping: 34 }}
-                />
-              )}
+            <li key={l.href}>
               <Link
                 href={l.href}
-                className={cn(
-                  "relative z-10 block rounded-full px-4 py-2 text-sm font-medium transition-colors",
-                  isActive(l.href) ? "text-cream" : "text-navy-600 hover:text-navy-900"
-                )}
+                aria-current={isActive(l.href) ? "page" : undefined}
+                className="group relative py-2 text-[0.95rem] text-navy-700 transition-colors hover:text-navy-900 aria-[current=page]:text-navy-900"
               >
                 {l.label}
+                <span
+                  className={cn(
+                    "absolute -bottom-0.5 left-0 h-[2px] w-full origin-left bg-amber-500 transition-transform duration-300",
+                    isActive(l.href) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                  )}
+                />
               </Link>
             </li>
           ))}
         </ul>
 
-        <div className="hidden items-center gap-2 md:flex">
-          <Button asChild variant="ghost" size="sm">
-            <Link href={account.href}>{account.label}</Link>
-          </Button>
-          <Button asChild variant="accent" size="sm">
-            <Link href="/homes">Give help</Link>
-          </Button>
+        <div className="hidden items-center gap-6 md:flex">
+          <Link href={account.href} className="text-[0.95rem] text-navy-700 transition-colors hover:text-navy-900">
+            {account.label}
+          </Link>
+          <Link
+            href="/homes"
+            className="rounded-full bg-navy-900 px-5 py-2.5 text-[0.9rem] font-medium text-cream transition-colors hover:bg-navy-800"
+          >
+            Give help
+          </Link>
         </div>
 
         <button
-          className="grid h-10 w-10 place-items-center rounded-full text-navy-800 hover:bg-navy-800/5 md:hidden"
+          className="font-mono text-xs uppercase tracking-[0.12em] text-navy-900 md:hidden"
           onClick={() => setOpenOn(open ? null : pathname)}
-          aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
+          aria-controls="mobile-menu"
         >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {open ? "Close" : "Menu"}
         </button>
       </nav>
 
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden md:hidden"
+            id="mobile-menu"
+            data-lenis-prevent
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-x-0 bottom-0 top-[68px] overflow-y-auto bg-cream md:hidden"
           >
-            <div className="container flex flex-col gap-1 pb-6 pt-2">
-              {LINKS.map((l, i) => (
-                <motion.div
+            <ul className="container border-t border-navy-900/10 pt-4">
+              {[...LINKS, { href: "/volunteer/hours", label: "Hours log" }, account].map((l, i) => (
+                <motion.li
                   key={l.href}
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.04 * i + 0.05 }}
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.04 * i, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  className="border-b border-navy-900/10"
                 >
-                  <Link
-                    href={l.href}
-                    className={cn(
-                      "block rounded-xl px-4 py-3 text-base font-medium",
-                      isActive(l.href) ? "bg-navy-800 text-cream" : "text-navy-700 hover:bg-navy-800/5"
-                    )}
-                  >
+                  <Link href={l.href} className="block py-4 font-serif text-[2.6rem] leading-none text-navy-900">
                     {l.label}
                   </Link>
-                </motion.div>
+                </motion.li>
               ))}
-              <div className="mt-3 grid grid-cols-2 gap-2">
-                <Button asChild variant="outline">
-                  <Link href={account.href}>{user ? account.label : "Login"}</Link>
-                </Button>
-                <Button asChild variant="accent">
-                  <Link href="/homes">Give help</Link>
-                </Button>
-              </div>
+            </ul>
+            <div className="container py-8">
+              <Link
+                href="/homes"
+                className="block rounded-full bg-navy-900 py-4 text-center font-medium text-cream"
+              >
+                Give help
+              </Link>
             </div>
           </motion.div>
         )}

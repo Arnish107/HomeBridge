@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { HomeCover } from "./home-cover";
 
 /** Unsplash serves resized, compressed images itself, so we skip Next's optimizer (and its quota). */
-const unsplash = (url: string, w: number) => `${url}?w=${w}&q=72&auto=format&fit=crop`;
+export const unsplash = (url: string, w: number) => `${url}?w=${w}&q=72&auto=format&fit=crop`;
 
 /**
  * Cover image for a home. Uses the home's photo when it has one,

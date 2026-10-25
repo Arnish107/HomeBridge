@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Logo } from "./logo";
+import { LogoMark } from "./logo";
 
 const COLS = [
   {
@@ -22,26 +22,23 @@ const COLS = [
 
 export function Footer() {
   return (
-    <footer className="mt-24 bg-navy-900 text-navy-200 print:hidden">
-      <div className="container grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr]">
-        <div className="max-w-sm">
-          <Logo light />
-          <p className="mt-4 text-sm leading-relaxed text-navy-300">
-            HomeBridge connects foster homes with neighbors who want to help, one coat, one notebook, one Tuesday
-            afternoon at a time.
-          </p>
-          <p className="mt-6 text-xs text-navy-400">
-            Locations are shown by city or county only. All contact goes through HomeBridge to protect the children
-            in care.
+    <footer className="mt-32 border-t border-navy-900/15 print:hidden">
+      <div className="container grid gap-12 py-16 md:grid-cols-12">
+        <div className="md:col-span-5">
+          <p className="max-w-sm font-serif text-3xl leading-[1.1] text-navy-900">
+            Helping foster homes in North Metro Atlanta, one coat, one notebook, one Tuesday afternoon at a time.
           </p>
         </div>
         {COLS.map((c) => (
-          <div key={c.title}>
-            <h4 className="text-xs font-semibold uppercase tracking-[0.16em] text-amber-400">{c.title}</h4>
-            <ul className="mt-4 space-y-2.5">
+          <div key={c.title} className="md:col-span-3 md:col-start-auto">
+            <h2 className="eyebrow">{c.title}</h2>
+            <ul className="mt-5 space-y-3">
               {c.links.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="text-sm text-navy-200 transition-colors hover:text-cream">
+                  <Link
+                    href={l.href}
+                    className="text-[0.95rem] text-navy-700 underline decoration-transparent underline-offset-4 transition-colors hover:text-navy-900 hover:decoration-amber-500"
+                  >
                     {l.label}
                   </Link>
                 </li>
@@ -50,10 +47,21 @@ export function Footer() {
           </div>
         ))}
       </div>
-      <div className="border-t border-white/5">
-        <div className="container flex flex-col gap-2 py-6 text-xs text-navy-400 sm:flex-row sm:justify-between">
-          <span>© {new Date().getFullYear()} HomeBridge. Built for the Congressional App Challenge.</span>
-          <span>Made in Georgia.</span>
+
+      <div className="container">
+        <div className="flex flex-col gap-3 border-t border-navy-900/15 py-6 text-sm text-navy-500 md:flex-row md:justify-between">
+          <p>Homes are shown by city or county only. Every message goes through HomeBridge.</p>
+          <p>Built for the Congressional App Challenge, Georgia.</p>
+        </div>
+      </div>
+
+      {/* Closing wordmark: the page ends at the largest scale it has. */}
+      <div aria-hidden className="overflow-hidden">
+        <div className="container flex items-end gap-[2vw] pb-4">
+          <LogoMark className="mb-[2.2vw] h-[6vw] min-h-8" />
+          <span className="select-none font-serif text-[clamp(4rem,17.5vw,17rem)] leading-[0.78] tracking-[-0.035em] text-navy-900">
+            HomeBridge
+          </span>
         </div>
       </div>
     </footer>

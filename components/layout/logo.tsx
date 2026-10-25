@@ -1,25 +1,22 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-export function LogoMark({ className }: { className?: string }) {
+/** The mark: a single amber arch over an ink baseline, the "bridge" in HomeBridge. */
+export function LogoMark({ className, light = false }: { className?: string; light?: boolean }) {
   return (
-    <svg viewBox="0 0 32 32" aria-hidden className={cn("h-8 w-8", className)}>
-      <rect width="32" height="32" rx="9" fill="#1B2A4A" />
-      {/* bridge arch */}
-      <path d="M6 22c3.2-6.2 16.8-6.2 20 0" fill="none" stroke="#F59E0B" strokeWidth="2.4" strokeLinecap="round" />
-      <path d="M6 22h20" stroke="#F9F7F4" strokeWidth="2.2" strokeLinecap="round" />
-      {/* roof */}
-      <path d="M11.5 13.2 16 9l4.5 4.2" fill="none" stroke="#F9F7F4" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+    <svg viewBox="0 0 40 24" aria-hidden className={cn("h-5 w-auto", className)}>
+      <path d="M4 20C8 8 32 8 36 20" fill="none" stroke="#E8A33D" strokeWidth="3" strokeLinecap="round" />
+      <path d="M1.5 21.5h37" stroke={light ? "#F4EFE4" : "#131A2B"} strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }
 
 export function Logo({ className, light = false }: { className?: string; light?: boolean }) {
   return (
-    <Link href="/" className={cn("group inline-flex items-center gap-2.5", className)} aria-label="HomeBridge home">
-      <LogoMark className="transition-transform duration-300 group-hover:-rotate-6" />
-      <span className={cn("text-[1.05rem] font-bold tracking-tight", light ? "text-cream" : "text-navy-800")}>
-        Home<span className="text-amber-500">Bridge</span>
+    <Link href="/" className={cn("group inline-flex items-end gap-2", className)} aria-label="HomeBridge, home">
+      <LogoMark light={light} className="mb-[0.3rem] transition-transform duration-500 group-hover:-translate-y-0.5" />
+      <span className={cn("font-serif text-[1.65rem] leading-none tracking-[-0.01em]", light ? "text-cream" : "text-navy-900")}>
+        HomeBridge
       </span>
     </Link>
   );

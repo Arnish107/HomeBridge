@@ -18,8 +18,8 @@ export function FlyerQR({ path, size = 200 }: { path: string; size?: number }) {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="rounded-2xl bg-white p-3 ring-1 ring-cream-200" style={{ width: size + 24, height: size + 24 }}>
-        {url && <QRCodeSVG value={url} size={size} fgColor="#1B2A4A" level="M" marginSize={0} />}
+      <div className="rounded-xl bg-card p-3 ring-1 ring-cream-200" style={{ width: size + 24, height: size + 24 }}>
+        {url && <QRCodeSVG value={url} size={size} fgColor="#131A2B" level="M" marginSize={0} title={`QR code: ${url}`} role="img" />}
       </div>
       {url && <p className="mt-2 max-w-[260px] break-all text-center text-[0.65rem] text-navy-400">{url}</p>}
     </div>

@@ -16,11 +16,11 @@ export function AuthShell({
 }) {
   return (
     <div className="container pt-8 md:pt-14">
-      <div className="grid overflow-hidden rounded-[2rem] border border-cream-200 bg-white shadow-lift lg:grid-cols-[0.9fr_1.1fr]">
+      <div className="grid overflow-hidden rounded-xl border border-cream-200 bg-card shadow-lift lg:grid-cols-[0.9fr_1.1fr]">
         <div className="bg-navy-800 p-8 text-cream sm:p-12">
           <Reveal>
             <p className="eyebrow text-amber-400">{eyebrow}</p>
-            <h1 className="mt-4 text-3xl font-bold leading-tight text-cream sm:text-4xl">{title}</h1>
+            <h1 className="mt-5 font-serif text-[clamp(2.8rem,4.5vw,4.25rem)] font-normal leading-[0.95] text-cream">{title}</h1>
             <p className="mt-4 text-navy-200">{body}</p>
             <ol className="mt-10 space-y-5">
               {points.map((p, i) => (
@@ -40,7 +40,7 @@ export function AuthShell({
 
 export function SetupNotice() {
   return (
-    <div className="mb-6 rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+    <div className="mb-6 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
       <strong className="font-semibold">Demo mode.</strong> Firebase isn&apos;t connected yet, so accounts can&apos;t be
       created or used. Add your Firebase keys to <code className="font-mono text-xs">.env.local</code> to turn on
       login.

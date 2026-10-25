@@ -35,11 +35,11 @@ export function AdminQueue() {
   }, [isAdmin]);
 
   if (!firebaseEnabled) return <SetupNotice />;
-  if (loading || !user) return <div className="h-64 animate-pulse rounded-3xl bg-cream-200" />;
+  if (loading || !user) return <div className="h-64 animate-pulse rounded-xl bg-cream-200" />;
   if (!isAdmin)
     return (
-      <div className="max-w-lg rounded-3xl border border-cream-200 bg-white p-8 shadow-soft">
-        <h1 className="text-2xl font-bold">Admins only</h1>
+      <div className="max-w-lg rounded-xl border border-cream-200 bg-card p-8 shadow-soft">
+        <h1 className="font-serif text-[2.6rem] font-normal leading-none">Admins only</h1>
         <p className="mt-2 text-navy-600">This page is for the HomeBridge review team.</p>
         <Button asChild className="mt-6">
           <Link href="/dashboard">Go to your dashboard</Link>
@@ -63,7 +63,7 @@ export function AdminQueue() {
       <header className="flex flex-col justify-between gap-6 border-b border-cream-300 pb-8 md:flex-row md:items-end">
         <div>
           <p className="eyebrow">Admin</p>
-          <h1 className="mt-3 text-4xl font-bold tracking-tightest sm:text-5xl">Registration queue</h1>
+          <h1 className="display mt-4 text-[clamp(3rem,6.5vw,5.75rem)]">Registration queue</h1>
           <p className="mt-2 text-sm text-navy-500">
             Verify each home&apos;s license before approving. Approved homes go live immediately.
           </p>
@@ -95,7 +95,7 @@ export function AdminQueue() {
 
       <div className="mt-8">
         {queue === null ? (
-          <div className="h-40 animate-pulse rounded-3xl bg-cream-200" />
+          <div className="h-40 animate-pulse rounded-xl bg-cream-200" />
         ) : queue.length === 0 ? (
           <Empty title="Nothing to review" body="New registration requests from /register will show up here." />
         ) : (
@@ -128,9 +128,9 @@ function Request({ p, onAct }: { p: PendingHome; onAct: (p: PendingHome, approve
   ];
 
   return (
-    <div className="grid gap-6 rounded-3xl border border-cream-200 bg-white p-6 shadow-soft lg:grid-cols-[1fr_280px]">
+    <div className="grid gap-6 rounded-xl border border-cream-200 bg-card p-6 shadow-soft lg:grid-cols-[1fr_280px]">
       <div>
-        <h2 className="text-xl font-bold">{p.homeName}</h2>
+        <h2 className="font-serif text-3xl font-normal leading-none">{p.homeName}</h2>
         <dl className="mt-4 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-[110px_1fr]">
           {rows.map(([k, v]) => (
             <div key={k} className="contents">

@@ -97,7 +97,7 @@ export function Dashboard() {
   if (loading || !user || state === "loading")
     return (
       <Shell>
-        <div className="h-64 animate-pulse rounded-3xl bg-cream-200" />
+        <div className="h-64 animate-pulse rounded-xl bg-cream-200" />
       </Shell>
     );
 
@@ -111,10 +111,10 @@ export function Dashboard() {
   if (!home)
     return (
       <Shell>
-        <div className="max-w-xl rounded-3xl border border-cream-200 bg-white p-8 shadow-soft">
+        <div className="max-w-xl rounded-xl border border-cream-200 bg-card p-8 shadow-soft">
           {isAdmin ? (
             <>
-              <h1 className="text-2xl font-bold">You&apos;re signed in as the admin</h1>
+              <h1 className="font-serif text-[2.6rem] font-normal leading-none">You&apos;re signed in as the admin</h1>
               <p className="mt-2 text-navy-600">Review registration requests from new foster homes.</p>
               <Button asChild className="mt-6">
                 <Link href="/admin">Open the review queue</Link>
@@ -123,7 +123,7 @@ export function Dashboard() {
           ) : registration?.status === "pending" ? (
             <>
               <p className="eyebrow">Under review</p>
-              <h1 className="mt-2 text-2xl font-bold">Thanks, {registration.contactName.split(" ")[0]}!</h1>
+              <h1 className="mt-2 font-serif text-[2.6rem] font-normal leading-none">Thanks, {registration.contactName.split(" ")[0]}!</h1>
               <p className="mt-2 text-navy-600">
                 We&apos;re reviewing the registration for <strong>{registration.homeName}</strong>. You&apos;ll be able
                 to manage your listing here as soon as it&apos;s approved.
@@ -131,7 +131,7 @@ export function Dashboard() {
             </>
           ) : registration?.status === "rejected" ? (
             <>
-              <h1 className="text-2xl font-bold">Registration not approved</h1>
+              <h1 className="font-serif text-[2.6rem] font-normal leading-none">Registration not approved</h1>
               <p className="mt-2 text-navy-600">
                 We weren&apos;t able to verify {registration.homeName}. Please contact the HomeBridge team if you think
                 this is a mistake.
@@ -139,7 +139,7 @@ export function Dashboard() {
             </>
           ) : (
             <>
-              <h1 className="text-2xl font-bold">No home linked to this account</h1>
+              <h1 className="font-serif text-[2.6rem] font-normal leading-none">No home linked to this account</h1>
               <p className="mt-2 text-navy-600">Register your foster home to start posting needs.</p>
               <Button asChild className="mt-6">
                 <Link href="/register">Register your home</Link>
@@ -165,7 +165,7 @@ export function Dashboard() {
       <header className="flex flex-col justify-between gap-6 border-b border-cream-300 pb-8 md:flex-row md:items-end">
         <div>
           <p className="eyebrow">Foster home dashboard</p>
-          <h1 className="mt-3 text-4xl font-bold tracking-tightest sm:text-5xl">{home.name}</h1>
+          <h1 className="display mt-4 text-[clamp(3rem,6.5vw,5.75rem)]">{home.name}</h1>
           <p className="mt-2 text-sm text-navy-500">
             {home.area} · {openNeeds} open needs · {home.opportunities.length} volunteer roles
             {updated && ` · Updated ${updated}`}
@@ -274,7 +274,7 @@ function Inbox({ messages, onRead }: { messages: InboxMessage[]; onRead: (id: st
             <span className="shrink-0 text-xs text-navy-400">{fmt(m.createdAt)}</span>
           </button>
           {open === m.id && (
-            <div className="mb-4 ml-6 rounded-2xl bg-white p-5 shadow-soft">
+            <div className="mb-4 ml-6 rounded-xl bg-card p-5 shadow-soft">
               <p className="whitespace-pre-wrap text-navy-700">{m.message}</p>
               <a
                 href={`mailto:${m.email}?subject=${encodeURIComponent("Re: your message on HomeBridge")}`}

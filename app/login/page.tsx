@@ -42,7 +42,7 @@ export default function LoginPage() {
         "Read messages from neighbors, sent safely through HomeBridge.",
       ]}
     >
-      <h2 className="text-2xl font-bold">Log in</h2>
+      <h2 className="font-serif text-[2.6rem] font-normal leading-none">Log in</h2>
       <p className="mt-1 text-sm text-navy-500">
         Browsing and donating don&apos;t need an account. This login is for verified foster homes.
       </p>

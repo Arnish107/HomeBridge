@@ -6,7 +6,7 @@ import { NEED_CATEGORIES, type Need } from "@/lib/types";
 import { timeAgo } from "@/lib/time";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Reveal, Stagger, StaggerItem } from "@/components/motion";
+import { Reveal } from "@/components/motion";
 import { ShareButton } from "@/components/share-button";
 import { HomePhoto, PhotoCredit } from "@/components/home-photo";
 import { ContactDialog } from "@/components/forms/contact-dialog";
@@ -26,7 +26,7 @@ function NeedRow({ need }: { need: Need }) {
     <li className={`flex items-center gap-4 py-4 ${need.fulfilled ? "opacity-60" : ""}`}>
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <p className={`font-medium text-navy-800 ${need.fulfilled ? "line-through decoration-navy-300" : ""}`}>
+          <p className={`font-serif text-[1.55rem] leading-tight text-navy-900 ${need.fulfilled ? "line-through decoration-navy-300" : ""}`}>
             {need.title}
           </p>
           {need.urgent && !need.fulfilled && <Badge variant="urgent">Urgent</Badge>}
@@ -72,7 +72,7 @@ export default async function HomeDetailPage({ params }: { params: Promise<{ id:
           <p className="eyebrow">
             {home.area} · Verified home{updated && ` · Updated ${updated}`}
           </p>
-          <h1 className="mt-4 text-5xl font-bold tracking-tightest sm:text-6xl lg:text-7xl">{home.name}</h1>
+          <h1 className="display mt-5 text-[clamp(3.4rem,9vw,8.5rem)]">{home.name}</h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-navy-600">{home.description}</p>
         </Reveal>
         <Reveal delay={0.1} className="flex flex-wrap gap-2 lg:justify-end">
@@ -89,7 +89,7 @@ export default async function HomeDetailPage({ params }: { params: Promise<{ id:
       </header>
 
       <Reveal delay={0.05} className="mt-10">
-        <div className="relative h-56 overflow-hidden rounded-[2rem] shadow-soft sm:h-80 lg:h-[26rem]">
+        <div className="relative h-56 overflow-hidden rounded-xl shadow-soft sm:h-80 lg:h-[26rem]">
           <HomePhoto home={home} width={1600} priority />
         </div>
         <PhotoCredit home={home} className="mt-2" />
@@ -102,7 +102,7 @@ export default async function HomeDetailPage({ params }: { params: Promise<{ id:
             <Reveal className="flex items-end justify-between gap-4">
               <div>
                 <p className="eyebrow">Needs list</p>
-                <h2 className="mt-2 text-2xl font-bold sm:text-3xl">What {home.name} needs</h2>
+                <h2 className="display mt-3 text-[clamp(2.4rem,4.4vw,3.75rem)]">What {home.name} needs</h2>
               </div>
             </Reveal>
             <p className="mt-3 max-w-xl text-sm text-navy-500">
@@ -110,41 +110,39 @@ export default async function HomeDetailPage({ params }: { params: Promise<{ id:
               an address.
             </p>
 
-            <Stagger className="mt-8 grid gap-4 md:grid-cols-2">
+            <div className="mt-10 grid gap-x-10 gap-y-12 md:grid-cols-2">
               {groups.map((g) => (
-                <StaggerItem key={g.value}>
-                  <div className="h-full rounded-2xl border border-cream-200 bg-white p-5 shadow-soft sm:p-6">
-                    <div className="flex items-baseline justify-between border-b border-cream-200 pb-3">
-                      <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-navy-500">{g.label}</h3>
-                      <span className="text-xs text-navy-400">{g.needs.filter((n) => !n.fulfilled).length} open</span>
-                    </div>
-                    <ul className="divide-y divide-cream-200">
-                      {g.needs.map((n) => (
-                        <NeedRow key={n.id} need={n} />
-                      ))}
-                    </ul>
+                <div key={g.value}>
+                  <div className="flex items-baseline justify-between border-b border-navy-900/80 pb-2">
+                    <h3 className="font-mono text-[0.7rem] font-medium uppercase tracking-[0.12em] text-navy-700">{g.label}</h3>
+                    <span className="font-mono text-[0.7rem] text-navy-500">{g.needs.filter((n) => !n.fulfilled).length} open</span>
                   </div>
-                </StaggerItem>
+                  <ul className="divide-y divide-navy-900/15">
+                    {g.needs.map((n) => (
+                      <NeedRow key={n.id} need={n} />
+                    ))}
+                  </ul>
+                </div>
               ))}
-            </Stagger>
+            </div>
           </section>
 
           {/* Volunteer */}
           <section id="volunteer">
             <Reveal>
               <p className="eyebrow">Volunteer</p>
-              <h2 className="mt-2 text-2xl font-bold sm:text-3xl">Give your time</h2>
+              <h2 className="display mt-3 text-[clamp(2.4rem,4.4vw,3.75rem)]">Give your time</h2>
             </Reveal>
             {home.opportunities.length === 0 ? (
               <p className="mt-6 text-navy-500">No open volunteer roles right now. Check back soon.</p>
             ) : (
-              <Stagger className="mt-8 divide-y divide-cream-300 border-y border-cream-300">
+              <ul className="mt-10 divide-y divide-navy-900/15 border-y border-navy-900/15">
                 {home.opportunities.map((o) => (
-                  <StaggerItem key={o.id}>
+                  <li key={o.id}>
                     <div className="grid gap-3 py-6 sm:grid-cols-[180px_1fr_auto] sm:items-center sm:gap-6">
-                      <p className="text-sm font-semibold text-amber-700">{o.schedule}</p>
+                      <p className="font-mono text-xs uppercase tracking-[0.08em] text-amber-700">{o.schedule}</p>
                       <div className="min-w-0">
-                        <h3 className="font-semibold">{o.title}</h3>
+                        <h3 className="font-serif text-[1.9rem] font-normal leading-none">{o.title}</h3>
                         <p className="mt-1 text-sm text-navy-500">{o.description}</p>
                       </div>
                       <SignupDialog
@@ -154,9 +152,9 @@ export default async function HomeDetailPage({ params }: { params: Promise<{ id:
                         triggerProps={{ size: "default", className: "justify-self-start" }}
                       />
                     </div>
-                  </StaggerItem>
+                  </li>
                 ))}
-              </Stagger>
+              </ul>
             )}
           </section>
         </div>
@@ -164,7 +162,7 @@ export default async function HomeDetailPage({ params }: { params: Promise<{ id:
         {/* Sidebar */}
         <aside className="lg:sticky lg:top-24 lg:self-start">
           <Reveal delay={0.15}>
-            <div className="rounded-3xl bg-navy-800 p-6 text-cream shadow-lift sm:p-7">
+            <div className="rounded-lg bg-navy-900 p-6 text-cream sm:p-7">
               <dl className="grid grid-cols-3 divide-x divide-white/10">
                 {[
                   { k: "Open needs", v: open.length },
@@ -172,8 +170,8 @@ export default async function HomeDetailPage({ params }: { params: Promise<{ id:
                   { k: "Roles", v: home.opportunities.length },
                 ].map((s, i) => (
                   <div key={s.k} className={i === 0 ? "pr-3" : "px-3"}>
-                    <dd className="text-3xl font-bold tracking-tight">{s.v}</dd>
-                    <dt className="mt-1 text-xs text-navy-300">{s.k}</dt>
+                    <dd className="font-serif text-5xl leading-none">{s.v}</dd>
+                    <dt className="mt-2 font-mono text-[0.66rem] uppercase tracking-[0.1em] text-navy-300">{s.k}</dt>
                   </div>
                 ))}
               </dl>

@@ -62,6 +62,8 @@ export default function HomesMap({
           key={h.id}
           position={[h.lat, h.lng]}
           icon={dot(h.id === activeId)}
+          title={`${h.name}, ${h.area}`}
+          alt={`${h.name}, ${h.area}`}
           eventHandlers={{ click: () => onSelect?.(h.id) }}
         >
           <Popup>

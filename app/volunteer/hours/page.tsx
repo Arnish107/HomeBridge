@@ -15,7 +15,7 @@ export default async function HoursPage() {
     <div className="container pb-8 pt-10 md:pt-14 print:p-0">
       <Reveal className="max-w-2xl print:hidden">
         <p className="eyebrow">Community service</p>
-        <h1 className="mt-3 text-4xl font-bold tracking-tightest sm:text-5xl">Your service hours log</h1>
+        <h1 className="display mt-4 text-[clamp(3rem,6.5vw,5.75rem)]">Your service hours log</h1>
         <p className="mt-4 text-lg text-navy-600">
           Log each session as you go, then print a signed record for school, a club, or a scholarship application.
         </p>
