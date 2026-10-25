@@ -1,73 +1,98 @@
 rules_version = '2';
 
-// HomeBridge Firestore rules.
-// `npm run setup` replaces __ADMIN_EMAIL__ with NEXT_PUBLIC_ADMIN_EMAIL from .env.local and publishes these rules.
+// HomeBridge Firestore security rules. Published by `npm run setup`.
+//
+// Roles are server-controlled:
+//   - Admin = a Firebase Auth custom claim `admin: true`, which only the Admin SDK (scripts/setup.mjs,
+//     run locally with the service-account key) can set. Users cannot grant themselves claims.
+//   - Home ownership = `ownerUid` on a home document, written only by an admin (or the setup script).
+//     Owners can edit their listing but can never change who owns it.
+// Anything not matched below is denied.
 service cloud.firestore {
   match /databases/{database}/documents {
 
     function signedIn() { return request.auth != null; }
-    function isAdmin() { return signedIn() && request.auth.token.email == '__ADMIN_EMAIL__'; }
+    function isAdmin() { return signedIn() && request.auth.token.admin == true; }
     function ownsHome(homeId) {
-      return signedIn() && get(/databases/$(database)/documents/homes/$(homeId)).data.ownerUid == request.auth.uid;
+      return signedIn()
+        && exists(/databases/$(database)/documents/homes/$(homeId))
+        && get(/databases/$(database)/documents/homes/$(homeId)).data.ownerUid == request.auth.uid;
     }
     function str(v, max) { return v is string && v.size() > 0 && v.size() <= max; }
+    function optStr(data, key, max) { return !data.keys().hasAny([key]) || (data[key] is string && data[key].size() <= max); }
+    function homeExists(homeId) { return exists(/databases/$(database)/documents/homes/$(homeId)); }
 
-    // Public listings. Only the owning foster home (or an admin) can edit,
-    // and nobody but an admin can change who owns a home.
+    // ---------- Public listings ----------
     match /homes/{homeId} {
       allow read: if true;
       allow create, delete: if isAdmin();
+      // Owners may edit their own listing, but not its id, owner, or protected flag.
       allow update: if isAdmin()
         || (signedIn()
             && resource.data.ownerUid == request.auth.uid
-            && request.resource.data.ownerUid == resource.data.ownerUid
-            && request.resource.data.id == resource.data.id
-            && request.resource.data.get('protected', false) == resource.data.get('protected', false));
+            && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['id', 'ownerUid', 'protected'])
+            && str(request.resource.data.name, 80)
+            && str(request.resource.data.area, 60)
+            && request.resource.data.needs is list && request.resource.data.needs.size() <= 60
+            && request.resource.data.opportunities is list && request.resource.data.opportunities.size() <= 30);
     }
 
-    // Registration requests, keyed by the applicant's uid. Private to the applicant and admins.
+    // ---------- Registration requests (doc id = applicant uid) ----------
     match /pending_homes/{uid} {
       allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(
+             ['uid', 'homeName', 'contactName', 'email', 'phone', 'area', 'zip', 'licenseNumber', 'description', 'status', 'createdAt'])
+        && request.resource.data.uid == uid
         && request.resource.data.status == 'pending'
-        && str(request.resource.data.homeName, 80);
+        && request.resource.data.createdAt == request.time
+        && str(request.resource.data.homeName, 80)
+        && str(request.resource.data.contactName, 80)
+        && str(request.resource.data.email, 120)
+        && str(request.resource.data.description, 800);
       allow read: if isAdmin() || (signedIn() && request.auth.uid == uid);
       allow update, delete: if isAdmin();
     }
 
-    // Contact-form messages: anyone can send, only the home's owner (or an admin) can read.
+    // ---------- Contact messages: anyone can send; only the home's owner or an admin can read ----------
     match /messages/{id} {
-      allow create: if str(request.resource.data.homeId, 80)
+      allow create: if request.resource.data.keys().hasOnly(['homeId', 'name', 'email', 'message', 'read', 'createdAt'])
+        && str(request.resource.data.homeId, 80) && homeExists(request.resource.data.homeId)
         && str(request.resource.data.name, 80)
         && str(request.resource.data.email, 120)
         && str(request.resource.data.message, 1500)
-        && request.resource.data.read == false;
+        && request.resource.data.read == false
+        && request.resource.data.createdAt == request.time;
       allow read: if isAdmin() || ownsHome(resource.data.homeId);
       allow update: if ownsHome(resource.data.homeId)
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
       allow delete: if isAdmin() || ownsHome(resource.data.homeId);
     }
 
-    // Volunteer sign-ups: anyone can sign up, only the home's owner (or an admin) can read.
+    // ---------- Volunteer sign-ups: anyone can sign up; only the home's owner or an admin can read ----------
     match /volunteer_signups/{id} {
-      allow create: if str(request.resource.data.homeId, 80)
+      allow create: if request.resource.data.keys().hasOnly(['homeId', 'opportunityId', 'name', 'email', 'hours', 'message', 'createdAt'])
+        && str(request.resource.data.homeId, 80) && homeExists(request.resource.data.homeId)
         && str(request.resource.data.opportunityId, 80)
         && str(request.resource.data.name, 80)
         && str(request.resource.data.email, 120)
+        && optStr(request.resource.data, 'message', 1000)
         && request.resource.data.hours is number
-        && request.resource.data.hours >= 1 && request.resource.data.hours <= 40;
+        && request.resource.data.hours >= 1 && request.resource.data.hours <= 40
+        && request.resource.data.createdAt == request.time;
       allow read: if isAdmin() || ownsHome(resource.data.homeId);
       allow delete: if isAdmin() || ownsHome(resource.data.homeId);
     }
 
-    // Public impact counters. Writes may only nudge the numbers up by small amounts.
+    // ---------- Public impact counters: anyone may nudge them up by small, bounded amounts ----------
     match /stats/impact {
       allow read: if true;
-      allow create, update: if isAdmin() || (
+      allow create: if isAdmin();
+      allow update: if isAdmin() || (
         request.resource.data.keys().hasOnly(['itemsDonated', 'volunteersSignedUp', 'hoursVolunteered'])
-        && request.resource.data.get('itemsDonated', 0) - resource.data.get('itemsDonated', 0) in [0, 1]
-        && request.resource.data.get('volunteersSignedUp', 0) - resource.data.get('volunteersSignedUp', 0) in [0, 1]
-        && request.resource.data.get('hoursVolunteered', 0) - resource.data.get('hoursVolunteered', 0) >= 0
-        && request.resource.data.get('hoursVolunteered', 0) - resource.data.get('hoursVolunteered', 0) <= 40
+        && request.resource.data.itemsDonated - resource.data.itemsDonated in [0, 1]
+        && request.resource.data.volunteersSignedUp - resource.data.volunteersSignedUp in [0, 1]
+        && request.resource.data.hoursVolunteered - resource.data.hoursVolunteered >= 0
+        && request.resource.data.hoursVolunteered - resource.data.hoursVolunteered <= 40
       );
     }
   }

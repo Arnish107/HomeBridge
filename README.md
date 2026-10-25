@@ -22,9 +22,9 @@ Without Firebase keys the site runs on bundled sample data (login is disabled an
 2. **Build → Authentication → Get started → Email/Password → Enable.**
 3. **Build → Firestore Database → Create database** (production mode, a US region).
 4. **Project settings → General → Your apps → Web (`</>`)**: register an app and copy the config values into
-   `.env.local` (see `.env.example`). Also set `NEXT_PUBLIC_ADMIN_EMAIL`.
+   `.env.local` (see `.env.example`).
 5. **Authentication → Users → Add user**: create the Sunshine Home demo login and an admin login.
-   Put the demo login's email in `.env.local` as `DEMO_HOME_EMAIL`.
+   Put their emails in `.env.local` as `DEMO_HOME_EMAIL` and `ADMIN_EMAIL` (local only, never shipped to the browser).
 6. **Project settings → Service accounts → Generate new private key**: save it in this folder as
    `serviceAccount.json` (git-ignored, never commit it).
 7. Run:
@@ -33,8 +33,9 @@ Without Firebase keys the site runs on bundled sample data (login is disabled an
    npm run setup
    ```
 
-   This publishes `firestore.rules`, creates the sample homes and impact counters, and links Sunshine Home to the
-   demo login. It is safe to run again: it only creates missing data, and Sunshine Home is marked `protected`, so
+   Run `npm run setup -- --dry-run` first to preview. Setup gives the admin account a server-controlled `admin`
+   role (a Firebase custom claim only the Admin SDK can set), publishes `firestore.rules`, creates the sample homes
+   and impact counters, and links Sunshine Home to the demo login. It is safe to run again: it only creates missing data, and Sunshine Home is marked `protected`, so
    re-running setup, redeploying, or rebuilding never overwrites it. `npm run setup -- --reset-samples` restores the
    other four sample homes but still leaves Sunshine Home alone.
 
@@ -43,7 +44,7 @@ Without Firebase keys the site runs on bundled sample data (login is disabled an
 1. Push this repo to a private GitHub repository.
 2. In Vercel, **Add New → Project → Import** the repo.
 3. Add every `NEXT_PUBLIC_*` variable from `.env.local` under **Environment Variables**
-   (not `DEMO_HOME_EMAIL` or `FIREBASE_SERVICE_ACCOUNT`, which are only for local setup).
+   (not `ADMIN_EMAIL`, `DEMO_HOME_EMAIL`, or `FIREBASE_SERVICE_ACCOUNT`, which are only for local setup).
 4. Deploy, then add the Vercel domain under Firebase **Authentication → Settings → Authorized domains**.
 
 The site is unlisted: every page sends `X-Robots-Tag: noindex` and `robots.txt` disallows all crawlers.
@@ -54,3 +55,4 @@ The site is unlisted: every page sends `X-Robots-Tag: noindex` and `robots.txt` 
 - Contact and volunteer forms go through the app; a home's email is never shown.
 - Home photos are illustrative stock images of spaces (Unsplash), never children.
 - Firestore rules let a foster home edit only its own listing and read only its own messages.
+- Admin access is a server-set custom claim, not an email check; users cannot grant it to themselves.

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { firebaseEnabled } from "@/lib/firebase";
 import { authErrorMessage, logIn } from "@/lib/auth";
-import { isAdminEmail } from "@/lib/use-auth";
+import { hasAdminClaim } from "@/lib/use-auth";
 import { AuthShell, SetupNotice } from "@/components/auth-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,7 +24,7 @@ export default function LoginPage() {
     setError(null);
     try {
       const { user } = await logIn(String(f.get("email")).trim(), String(f.get("password")));
-      router.push(isAdminEmail(user.email) ? "/admin" : "/dashboard");
+      router.push((await hasAdminClaim(user)) ? "/admin" : "/dashboard");
     } catch (err) {
       setError(authErrorMessage(err));
       setBusy(false);
