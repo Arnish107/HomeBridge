@@ -19,7 +19,9 @@ const LINKS = [
 export function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
+  // The mobile menu belongs to the page it was opened on, so navigating closes it.
+  const [openOn, setOpenOn] = useState<string | null>(null);
+  const open = openOn === pathname;
   const { user, isAdmin } = useAuth();
   const account = user
     ? { href: isAdmin ? "/admin" : "/dashboard", label: isAdmin ? "Admin" : "Dashboard" }
@@ -31,8 +33,6 @@ export function Navbar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  useEffect(() => setOpen(false), [pathname]);
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
 
@@ -82,7 +82,7 @@ export function Navbar() {
 
         <button
           className="grid h-10 w-10 place-items-center rounded-full text-navy-800 hover:bg-navy-800/5 md:hidden"
-          onClick={() => setOpen((v) => !v)}
+          onClick={() => setOpenOn(open ? null : pathname)}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
         >

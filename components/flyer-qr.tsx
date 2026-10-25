@@ -1,13 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "./ui/button";
 
+const noSubscribe = () => () => {};
+
 /** QR code pointing at the home's public page, using whatever origin the site is served from. */
 export function FlyerQR({ path, size = 200 }: { path: string; size?: number }) {
-  const [url, setUrl] = useState<string | null>(null);
-  useEffect(() => setUrl(new URL(path, process.env.NEXT_PUBLIC_SITE_URL || window.location.origin).toString()), [path]);
+  const origin = useSyncExternalStore(
+    noSubscribe,
+    () => window.location.origin,
+    () => null
+  );
+  const base = process.env.NEXT_PUBLIC_SITE_URL || origin;
+  const url = base ? new URL(path, base).toString() : null;
 
   return (
     <div className="flex flex-col items-center">

@@ -12,10 +12,10 @@ export const metadata: Metadata = {
   description: "Find a verified foster home near you and see exactly what they need.",
 };
 
-export default async function BrowseHomesPage({ searchParams }: { searchParams: { category?: string } }) {
-  const homes = await getHomes();
-  const initial = NEED_CATEGORIES.some((c) => c.value === searchParams.category)
-    ? (searchParams.category as NeedCategory)
+export default async function BrowseHomesPage({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
+  const [homes, { category }] = await Promise.all([getHomes(), searchParams]);
+  const initial = NEED_CATEGORIES.some((c) => c.value === category)
+    ? (category as NeedCategory)
     : "all";
 
   return (

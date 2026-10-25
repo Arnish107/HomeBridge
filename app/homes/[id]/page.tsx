@@ -15,8 +15,9 @@ import { SignupDialog } from "@/components/forms/signup-dialog";
 // Always render fresh so a foster home's dashboard edits show up immediately.
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const home = await getHome(params.id);
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const home = await getHome(id);
   return home ? { title: home.name, description: home.description } : { title: "Home not found" };
 }
 
@@ -44,8 +45,9 @@ function NeedRow({ need }: { need: Need }) {
   );
 }
 
-export default async function HomeDetailPage({ params }: { params: { id: string } }) {
-  const home = await getHome(params.id);
+export default async function HomeDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const home = await getHome(id);
   if (!home) notFound();
 
   const open = home.needs.filter((n) => !n.fulfilled);

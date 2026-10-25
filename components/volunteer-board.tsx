@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { useStoredState } from "@/lib/use-stored-state";
+import { EMPTY_LOG, HOURS_KEY } from "./hours-log";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import type { FosterHome, VolunteerOpportunity } from "@/lib/types";
@@ -16,21 +18,13 @@ const OPP_CATEGORIES: { value: VolunteerOpportunity["category"]; label: string }
   { value: "other", label: "Other" },
 ];
 
-const HOURS_KEY = "homebridge.hours.v1";
-
-/** Reads the visitor's saved hours log (kept in the browser by the hours log page). */
+/** Totals from the visitor's saved hours log (kept in this browser by the hours log page). */
 function useLoggedHours() {
-  const [hours, setHours] = useState<{ total: number; sessions: number } | null>(null);
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(HOURS_KEY);
-      const entries: { hours: number }[] = raw ? JSON.parse(raw).entries ?? [] : [];
-      setHours({ total: entries.reduce((n, e) => n + (Number(e.hours) || 0), 0), sessions: entries.length });
-    } catch {
-      setHours({ total: 0, sessions: 0 });
-    }
-  }, []);
-  return hours;
+  const [log] = useStoredState(HOURS_KEY, EMPTY_LOG);
+  return {
+    total: log.entries.reduce((n, e) => n + (Number(e.hours) || 0), 0),
+    sessions: log.entries.length,
+  };
 }
 
 export function VolunteerBoard({ homes }: { homes: FosterHome[] }) {

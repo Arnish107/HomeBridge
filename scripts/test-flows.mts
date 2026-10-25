@@ -100,7 +100,7 @@ try {
   });
   await check("mark the need fulfilled + count the donation, and both persist", async () => {
     home = await saveHome({ ...home!, needs: home!.needs.map((n) => (n.id === "flow1" ? { ...n, fulfilled: true } : n)) });
-    await countDonation();
+    await countDonation(SUN);
     const n = (await sunRef.get()).data()!.needs.find((x: { id: string }) => x.id === "flow1");
     assert(n?.fulfilled === true, "fulfilled not saved");
     assert((await statsRef.get()).data()!.itemsDonated === statsBefore.itemsDonated + 1, "donation counter not incremented");

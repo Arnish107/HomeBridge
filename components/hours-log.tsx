@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useStoredState } from "@/lib/use-stored-state";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -15,23 +16,14 @@ interface Entry {
   hours: number;
 }
 
-interface LogState {
+export interface LogState {
   volunteer: string;
   school: string;
   entries: Entry[];
 }
 
-const KEY = "homebridge.hours.v1";
-const EMPTY: LogState = { volunteer: "", school: "", entries: [] };
-
-function load(): LogState {
-  try {
-    const raw = localStorage.getItem(KEY);
-    return raw ? { ...EMPTY, ...JSON.parse(raw) } : EMPTY;
-  } catch {
-    return EMPTY;
-  }
-}
+export const HOURS_KEY = "homebridge.hours.v1";
+export const EMPTY_LOG: LogState = { volunteer: "", school: "", entries: [] };
 
 /** Local (not UTC) date as YYYY-MM-DD, for date inputs. */
 const today = () => {
@@ -43,22 +35,8 @@ const fmtDate = (d: string) =>
   new Date(d + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
 export function HoursLog({ homes }: { homes: string[] }) {
-  const [state, setState] = useState<LogState>(EMPTY);
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    setState(load());
-    setReady(true);
-  }, []);
-
-  useEffect(() => {
-    if (!ready) return;
-    try {
-      localStorage.setItem(KEY, JSON.stringify(state));
-    } catch {
-      // storage unavailable (private mode); the log still works for this visit
-    }
-  }, [state, ready]);
+  // Saved in this browser only; survives reloads.
+  const [state, setState] = useStoredState(HOURS_KEY, EMPTY_LOG);
 
   const total = useMemo(() => state.entries.reduce((n, e) => n + e.hours, 0), [state.entries]);
   const sorted = useMemo(() => [...state.entries].sort((a, b) => a.date.localeCompare(b.date)), [state.entries]);

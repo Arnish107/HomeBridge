@@ -83,17 +83,35 @@ service cloud.firestore {
       allow delete: if isAdmin() || ownsHome(resource.data.homeId);
     }
 
-    // ---------- Public impact counters: anyone may nudge them up by small, bounded amounts ----------
+    // ---------- Public impact counters ----------
+    // Every increase must be backed by real data:
+    //   - volunteers/hours: only in the same write that creates a new volunteer sign-up,
+    //     by exactly 1 volunteer and exactly that sign-up's hours;
+    //   - items donated: only by the signed-in owner of a home, by exactly 1.
     match /stats/impact {
+      function changedOnly(keys) { return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys); }
+      function delta(k) { return request.resource.data[k] - resource.data[k]; }
+      function signupPath(id) { return /databases/$(database)/documents/volunteer_signups/$(id); }
+
+      function volunteerBump() {
+        let id = request.resource.data.lastSignup;
+        return changedOnly(['volunteersSignedUp', 'hoursVolunteered', 'lastSignup'])
+          && id is string
+          && !exists(signupPath(id))
+          && existsAfter(signupPath(id))
+          && delta('volunteersSignedUp') == 1
+          && delta('hoursVolunteered') == getAfter(signupPath(id)).data.hours;
+      }
+      function donationBump() {
+        return changedOnly(['itemsDonated', 'lastHome'])
+          && request.resource.data.lastHome is string
+          && ownsHome(request.resource.data.lastHome)
+          && delta('itemsDonated') == 1;
+      }
+
       allow read: if true;
       allow create: if isAdmin();
-      allow update: if isAdmin() || (
-        request.resource.data.keys().hasOnly(['itemsDonated', 'volunteersSignedUp', 'hoursVolunteered'])
-        && request.resource.data.itemsDonated - resource.data.itemsDonated in [0, 1]
-        && request.resource.data.volunteersSignedUp - resource.data.volunteersSignedUp in [0, 1]
-        && request.resource.data.hoursVolunteered - resource.data.hoursVolunteered >= 0
-        && request.resource.data.hoursVolunteered - resource.data.hoursVolunteered <= 40
-      );
+      allow update: if isAdmin() || volunteerBump() || donationBump();
     }
   }
 }

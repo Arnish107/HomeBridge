@@ -75,7 +75,8 @@ else {
 if (demoUser.customClaims?.admin) {
   step("remove the admin role from the demo account");
   if (!dryRun) {
-    const { admin: _drop, ...rest } = demoUser.customClaims;
+    const rest = { ...demoUser.customClaims };
+    delete rest.admin;
     await auth.setCustomUserClaims(demoUser.uid, rest);
   }
 } else note("Demo account has no admin role (correct)");

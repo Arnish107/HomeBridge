@@ -75,7 +75,7 @@ export function Dashboard() {
       setSaving("saving");
       try {
         setHome(await saveHome(next));
-        if (opts?.donated) await countDonation().catch(() => {});
+        if (opts?.donated) await countDonation(next.id).catch(() => {});
         setSaving("saved");
         setTimeout(() => setSaving((s) => (s === "saved" ? "idle" : s)), 1800);
       } catch (err) {

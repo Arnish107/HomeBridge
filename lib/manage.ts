@@ -32,8 +32,9 @@ export async function saveHome(home: OwnedHome): Promise<OwnedHome> {
   return next;
 }
 
-export async function countDonation() {
-  await setDoc(doc(db(), "stats", "impact"), { itemsDonated: increment(1) }, { merge: true });
+/** +1 "items donated". Rules only allow it from the signed-in owner of `homeId`. */
+export async function countDonation(homeId: string) {
+  await setDoc(doc(db(), "stats", "impact"), { itemsDonated: increment(1), lastHome: homeId }, { merge: true });
 }
 
 export interface InboxMessage {

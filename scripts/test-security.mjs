@@ -15,7 +15,7 @@ import { initializeApp, deleteApp } from "firebase/app";
 import { getAuth, signInWithCustomToken } from "firebase/auth";
 import {
   addDoc, collection, doc, getDoc, getDocs, getFirestore, increment, query, serverTimestamp,
-  setDoc, updateDoc, where,
+  setDoc, updateDoc, where, writeBatch,
 } from "firebase/firestore";
 
 const env = process.env;
@@ -62,7 +62,8 @@ async function expect(label, shouldSucceed, fn) {
     ok = !shouldSucceed && e.code === "permission-denied";
     if (!ok) detail = ` (${e.code ?? e.message})`;
   }
-  ok ? passed++ : failed++;
+  if (ok) passed++;
+  else failed++;
   console.log(`${ok ? "PASS" : "FAIL"}  ${label}${detail}`);
 }
 
@@ -124,6 +125,26 @@ try {
   });
   await expect("cannot inflate impact counters", false, () =>
     setDoc(doc(anon.db, "stats", "impact"), { itemsDonated: increment(1000) }, { merge: true }));
+  await expect("cannot bump volunteer counters without a real sign-up", false, () =>
+    setDoc(doc(anon.db, "stats", "impact"), { volunteersSignedUp: increment(1), hoursVolunteered: increment(2), lastSignup: "fake-id" }, { merge: true }));
+  await expect("cannot bump 'items donated' without owning a home", false, () =>
+    setDoc(doc(anon.db, "stats", "impact"), { itemsDonated: increment(1), lastHome: SUN }, { merge: true }));
+  await expect("sign-up + matching counter bump in one write is allowed", true, async () => {
+    const s = doc(collection(anon.db, "volunteer_signups"));
+    const b = writeBatch(anon.db);
+    b.set(s, { homeId: SUN, opportunityId: "o1", name: "Security Test", email: "test@example.com", hours: 2, message: "", createdAt: serverTimestamp() });
+    b.set(doc(anon.db, "stats", "impact"), { volunteersSignedUp: increment(1), hoursVolunteered: increment(2), lastSignup: s.id }, { merge: true });
+    await b.commit();
+    created.signups.push(s.id);
+  });
+  await expect("hours bump must equal the sign-up's hours", false, async () => {
+    const s = doc(collection(anon.db, "volunteer_signups"));
+    const b = writeBatch(anon.db);
+    b.set(s, { homeId: SUN, opportunityId: "o1", name: "Security Test", email: "test@example.com", hours: 2, message: "", createdAt: serverTimestamp() });
+    b.set(doc(anon.db, "stats", "impact"), { volunteersSignedUp: increment(1), hoursVolunteered: increment(40), lastSignup: s.id }, { merge: true });
+    await b.commit();
+    created.signups.push(s.id); // only reached if wrongly allowed, so cleanup still happens
+  });
 
   console.log("\n— Demo account (Sunshine Home owner) —");
   const needs = sunBefore.needs;
@@ -132,8 +153,12 @@ try {
     updateDoc(doc(demo.db, "homes", SUN), { needs: [...needs, testNeed] }));
   await expect("can mark that need fulfilled", true, () =>
     updateDoc(doc(demo.db, "homes", SUN), { needs: [...needs, { ...testNeed, fulfilled: true }] }));
-  await expect("can count a donation (+1)", true, () =>
-    setDoc(doc(demo.db, "stats", "impact"), { itemsDonated: increment(1) }, { merge: true }));
+  await expect("can count a donation (+1) for its own home", true, () =>
+    setDoc(doc(demo.db, "stats", "impact"), { itemsDonated: increment(1), lastHome: SUN }, { merge: true }));
+  await expect("cannot count a donation for another home", false, () =>
+    setDoc(doc(demo.db, "stats", "impact"), { itemsDonated: increment(1), lastHome: OTHER }, { merge: true }));
+  await expect("cannot count more than one donation at a time", false, () =>
+    setDoc(doc(demo.db, "stats", "impact"), { itemsDonated: increment(5), lastHome: SUN }, { merge: true }));
   await expect("can remove that need again", true, () => updateDoc(doc(demo.db, "homes", SUN), { needs }));
   await expect("cannot transfer ownership of its home", false, () =>
     updateDoc(doc(demo.db, "homes", SUN), { ownerUid: "someone-else" }));
