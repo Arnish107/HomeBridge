@@ -90,12 +90,11 @@ export function Navbar() {
         {open && (
           <motion.div
             id="mobile-menu"
-            data-lenis-prevent
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-x-0 bottom-0 top-[68px] overflow-y-auto bg-cream md:hidden"
+            className="fixed inset-x-0 bottom-0 top-[68px] overflow-y-auto overscroll-contain bg-cream md:hidden"
           >
             <ul className="container border-t border-navy-900/10 pt-4">
               {[...LINKS, { href: "/volunteer/hours", label: "Hours log" }, account].map((l, i) => (

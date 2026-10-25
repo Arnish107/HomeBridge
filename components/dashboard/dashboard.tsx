@@ -295,7 +295,7 @@ function Signups({ signups, home }: { signups: Signup[]; home: OwnedHome }) {
     return <Empty title="No sign-ups yet" body="Volunteers who sign up for one of your roles will appear here." />;
   const role = (id: string) => home.opportunities.find((o) => o.id === id)?.title ?? "Removed role";
   return (
-    <div className="overflow-x-auto" data-lenis-prevent>
+    <div className="overflow-x-auto">
       <table className="w-full min-w-[640px] text-left text-sm">
         <thead>
           <tr className="border-b border-cream-300 text-xs uppercase tracking-wider text-navy-400">

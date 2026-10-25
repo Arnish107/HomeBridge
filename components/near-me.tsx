@@ -178,7 +178,6 @@ export function NearMe({ homes }: { homes: FosterHome[] }) {
 
       <div className="order-1 lg:order-2">
         <div
-          data-lenis-prevent
           className="relative z-0 h-72 overflow-hidden rounded-xl border border-cream-200 shadow-soft sm:h-96 lg:sticky lg:top-24 lg:h-[calc(100vh-8rem)]"
         >
           <HomesMap homes={results.map((r) => r.home)} activeId={activeId} onSelect={setActiveId} />

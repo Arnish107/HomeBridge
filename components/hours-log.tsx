@@ -163,7 +163,7 @@ export function HoursLog({ homes }: { homes: string[] }) {
               <p className="mt-1 max-w-xs text-sm text-navy-500">Add your first volunteer session with the form.</p>
             </div>
           ) : (
-            <div className="-mx-2 overflow-x-auto px-2" data-lenis-prevent>
+            <div className="-mx-2 overflow-x-auto px-2">
               <table className="mt-4 w-full min-w-[520px] text-left text-sm">
                 <thead>
                   <tr className="text-xs uppercase tracking-wider text-navy-400">

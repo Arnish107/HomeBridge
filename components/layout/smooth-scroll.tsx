@@ -1,58 +1,22 @@
 "use client";
 
-import { useEffect, useRef, useSyncExternalStore } from "react";
+import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { ReactLenis, useLenis, type LenisRef } from "lenis/react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
-
-const REDUCED = "(prefers-reduced-motion: reduce)";
-const subscribeReduced = (cb: () => void) => {
-  const mq = window.matchMedia(REDUCED);
-  mq.addEventListener("change", cb);
-  return () => mq.removeEventListener("change", cb);
-};
-
-function ScrollToTopOnRoute() {
-  const lenis = useLenis();
-  const pathname = usePathname();
-  useEffect(() => {
-    lenis?.scrollTo(0, { immediate: true });
-    // New page, new layout: let ScrollTrigger re-measure.
-    ScrollTrigger.refresh();
-  }, [pathname, lenis]);
-  return null;
-}
+import { ScrollTrigger } from "@/lib/gsap";
 
 /**
- * Lenis smooth scrolling driven by GSAP's ticker, so Lenis, ScrollTrigger and
- * Framer Motion all read the same scroll position on the same frame.
- * Smoothing is off for visitors who prefer reduced motion.
+ * Native browser scrolling, deliberately. We previously used Lenis smooth scrolling, but it
+ * intercepts wheel events and must be driven every frame; when that wiring failed, the mouse
+ * wheel stopped working entirely. Native scrolling is reliable with mouse, trackpad, touch,
+ * keyboard and scrollbar, and GSAP ScrollTrigger reads it directly.
+ *
+ * This only tells ScrollTrigger to re-measure after a client-side navigation changes the layout.
  */
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
-  const lenisRef = useRef<LenisRef>(null);
-  const reduced = useSyncExternalStore(subscribeReduced, () => window.matchMedia(REDUCED).matches, () => false);
-
+  const pathname = usePathname();
   useEffect(() => {
-    const lenis = lenisRef.current?.lenis;
-    if (!lenis) return;
-    const tick = (time: number) => lenis.raf(time * 1000);
-    lenis.on("scroll", ScrollTrigger.update);
-    gsap.ticker.add(tick);
-    gsap.ticker.lagSmoothing(0);
-    return () => {
-      lenis.off("scroll", ScrollTrigger.update);
-      gsap.ticker.remove(tick);
-    };
-  }, [reduced]);
-
-  return (
-    <ReactLenis
-      root
-      ref={lenisRef}
-      options={{ autoRaf: false, lerp: 0.1, smoothWheel: !reduced, anchors: { offset: -88 } }}
-    >
-      <ScrollToTopOnRoute />
-      {children}
-    </ReactLenis>
-  );
+    const id = requestAnimationFrame(() => ScrollTrigger.refresh());
+    return () => cancelAnimationFrame(id);
+  }, [pathname]);
+  return <>{children}</>;
 }
