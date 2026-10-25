@@ -1,0 +1,74 @@
+rules_version = '2';
+
+// HomeBridge Firestore rules.
+// `npm run setup` replaces __ADMIN_EMAIL__ with NEXT_PUBLIC_ADMIN_EMAIL from .env.local and publishes these rules.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function isAdmin() { return signedIn() && request.auth.token.email == '__ADMIN_EMAIL__'; }
+    function ownsHome(homeId) {
+      return signedIn() && get(/databases/$(database)/documents/homes/$(homeId)).data.ownerUid == request.auth.uid;
+    }
+    function str(v, max) { return v is string && v.size() > 0 && v.size() <= max; }
+
+    // Public listings. Only the owning foster home (or an admin) can edit,
+    // and nobody but an admin can change who owns a home.
+    match /homes/{homeId} {
+      allow read: if true;
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin()
+        || (signedIn()
+            && resource.data.ownerUid == request.auth.uid
+            && request.resource.data.ownerUid == resource.data.ownerUid
+            && request.resource.data.id == resource.data.id
+            && request.resource.data.get('protected', false) == resource.data.get('protected', false));
+    }
+
+    // Registration requests, keyed by the applicant's uid. Private to the applicant and admins.
+    match /pending_homes/{uid} {
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.status == 'pending'
+        && str(request.resource.data.homeName, 80);
+      allow read: if isAdmin() || (signedIn() && request.auth.uid == uid);
+      allow update, delete: if isAdmin();
+    }
+
+    // Contact-form messages: anyone can send, only the home's owner (or an admin) can read.
+    match /messages/{id} {
+      allow create: if str(request.resource.data.homeId, 80)
+        && str(request.resource.data.name, 80)
+        && str(request.resource.data.email, 120)
+        && str(request.resource.data.message, 1500)
+        && request.resource.data.read == false;
+      allow read: if isAdmin() || ownsHome(resource.data.homeId);
+      allow update: if ownsHome(resource.data.homeId)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+      allow delete: if isAdmin() || ownsHome(resource.data.homeId);
+    }
+
+    // Volunteer sign-ups: anyone can sign up, only the home's owner (or an admin) can read.
+    match /volunteer_signups/{id} {
+      allow create: if str(request.resource.data.homeId, 80)
+        && str(request.resource.data.opportunityId, 80)
+        && str(request.resource.data.name, 80)
+        && str(request.resource.data.email, 120)
+        && request.resource.data.hours is number
+        && request.resource.data.hours >= 1 && request.resource.data.hours <= 40;
+      allow read: if isAdmin() || ownsHome(resource.data.homeId);
+      allow delete: if isAdmin() || ownsHome(resource.data.homeId);
+    }
+
+    // Public impact counters. Writes may only nudge the numbers up by small amounts.
+    match /stats/impact {
+      allow read: if true;
+      allow create, update: if isAdmin() || (
+        request.resource.data.keys().hasOnly(['itemsDonated', 'volunteersSignedUp', 'hoursVolunteered'])
+        && request.resource.data.get('itemsDonated', 0) - resource.data.get('itemsDonated', 0) in [0, 1]
+        && request.resource.data.get('volunteersSignedUp', 0) - resource.data.get('volunteersSignedUp', 0) in [0, 1]
+        && request.resource.data.get('hoursVolunteered', 0) - resource.data.get('hoursVolunteered', 0) >= 0
+        && request.resource.data.get('hoursVolunteered', 0) - resource.data.get('hoursVolunteered', 0) <= 40
+      );
+    }
+  }
+}

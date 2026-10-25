@@ -1,0 +1,314 @@
+[
+  {
+    "id": "sunshine-home",
+    "name": "Sunshine Home",
+    "area": "Cumming, GA",
+    "county": "Forsyth County",
+    "zips": [
+      "30040",
+      "30041",
+      "30028"
+    ],
+    "description": "Sunshine Home is a licensed foster home in Cumming caring for up to six children between the ages of 5 and 14. Our focus is stability: steady routines, a quiet place to do homework, and a full dinner table every night. Many of our kids arrive mid-season with only what they could carry, so seasonal clothing and school supplies make an immediate difference. We also love having community volunteers who show up consistently, especially for homework help and weekend outings.",
+    "lat": 34.2073,
+    "lng": -84.1402,
+    "tone": 3,
+    "needs": [
+      {
+        "id": "n1",
+        "title": "Winter coats (kids sizes 6-14)",
+        "category": "clothes",
+        "urgent": true,
+        "fulfilled": false,
+        "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/PLACEHOLDER-SUNSHINE"
+      },
+      {
+        "id": "n2",
+        "title": "School backpacks",
+        "category": "school",
+        "urgent": false,
+        "fulfilled": false,
+        "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/PLACEHOLDER-SUNSHINE"
+      },
+      {
+        "id": "n3",
+        "title": "Canned food & pantry staples",
+        "category": "food",
+        "urgent": false,
+        "fulfilled": false,
+        "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/PLACEHOLDER-SUNSHINE"
+      },
+      {
+        "id": "n4",
+        "title": "Bath towels & washcloths",
+        "category": "supplies",
+        "urgent": false,
+        "fulfilled": false,
+        "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/PLACEHOLDER-SUNSHINE"
+      }
+    ],
+    "opportunities": [
+      {
+        "id": "o1",
+        "title": "Homework tutoring",
+        "schedule": "Tuesdays, 4-6pm",
+        "category": "tutoring",
+        "description": "Help elementary and middle schoolers with reading and math homework."
+      },
+      {
+        "id": "o2",
+        "title": "Saturday park outing helpers",
+        "schedule": "1st Saturday monthly, 10am-1pm",
+        "category": "events",
+        "description": "Join staff for a supervised morning at a local park."
+      }
+    ],
+    "photo": {
+      "url": "https://images.unsplash.com/photo-1604882234072-d5741489e0c0",
+      "alt": "Sunlit front porch with rocking chairs and a fall wreath",
+      "credit": "Robin Jonathan Deutsch",
+      "creditUrl": "https://unsplash.com/@rodeutsch"
+    }
+  },
+  {
+    "id": "hope-house",
+    "name": "Hope House",
+    "area": "Alpharetta, GA",
+    "county": "Fulton County",
+    "zips": [
+      "30004",
+      "30005",
+      "30009",
+      "30022"
+    ],
+    "description": "Hope House specializes in infants and toddlers in emergency placement. Many children arrive with nothing, so everyday essentials make an immediate difference.",
+    "lat": 34.0754,
+    "lng": -84.2941,
+    "tone": 2,
+    "needs": [
+      {
+        "id": "n1",
+        "title": "Baby formula",
+        "category": "food",
+        "urgent": false,
+        "fulfilled": false,
+        "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/PLACEHOLDER-HOPE"
+      },
+      {
+        "id": "n2",
+        "title": "Diapers (sizes 3-5)",
+        "category": "supplies",
+        "urgent": false,
+        "fulfilled": false,
+        "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/PLACEHOLDER-HOPE"
+      },
+      {
+        "id": "n3",
+        "title": "Toddler clothes (2T-4T)",
+        "category": "clothes",
+        "urgent": false,
+        "fulfilled": false,
+        "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/PLACEHOLDER-HOPE"
+      }
+    ],
+    "opportunities": [
+      {
+        "id": "o1",
+        "title": "Weekend meal prep",
+        "schedule": "Sundays, 2-5pm",
+        "category": "meals",
+        "description": "Prep and portion freezer-friendly meals for the week ahead."
+      }
+    ],
+    "photo": {
+      "url": "https://images.unsplash.com/photo-1774578342155-8d7e44a18bfd",
+      "alt": "Bright nursery with a white crib and armchair",
+      "credit": "Franco Debartolo",
+      "creditUrl": "https://unsplash.com/@francotheshooter"
+    }
+  },
+  {
+    "id": "new-beginnings",
+    "name": "New Beginnings",
+    "area": "Roswell, GA",
+    "county": "Fulton County",
+    "zips": [
+      "30075",
+      "30076",
+      "30077"
+    ],
+    "description": "New Beginnings supports teens preparing for independence, with a strong focus on school success, life skills, and mentorship.",
+    "lat": 34.0232,
+    "lng": -84.3616,
+    "tone": 0,
+    "needs": [
+      {
+        "id": "n1",
+        "title": "Notebooks",
+        "category": "school",
+        "urgent": false,
+        "fulfilled": false,
+        "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/PLACEHOLDER-NEWBEGIN"
+      },
+      {
+        "id": "n2",
+        "title": "Pencils & pens",
+        "category": "school",
+        "urgent": false,
+        "fulfilled": false,
+        "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/PLACEHOLDER-NEWBEGIN"
+      },
+      {
+        "id": "n3",
+        "title": "Hygiene kits",
+        "category": "supplies",
+        "urgent": false,
+        "fulfilled": false,
+        "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/PLACEHOLDER-NEWBEGIN"
+      }
+    ],
+    "opportunities": [
+      {
+        "id": "o1",
+        "title": "Teen mentoring",
+        "schedule": "Thursdays, 5-6:30pm",
+        "category": "mentoring",
+        "description": "Talk college, jobs, and budgeting with teens one-on-one."
+      },
+      {
+        "id": "o2",
+        "title": "SAT prep study hall",
+        "schedule": "Wednesdays, 6-8pm",
+        "category": "tutoring",
+        "description": "Run practice sections and review answers with small groups."
+      }
+    ],
+    "photo": {
+      "url": "https://images.unsplash.com/photo-1758060215425-303300b1c7e2",
+      "alt": "Bright bedroom with a study desk",
+      "credit": "Clay Banks",
+      "creditUrl": "https://unsplash.com/@claybanks"
+    }
+  },
+  {
+    "id": "safe-harbor",
+    "name": "Safe Harbor",
+    "area": "Lawrenceville, GA",
+    "county": "Gwinnett County",
+    "zips": [
+      "30043",
+      "30044",
+      "30045",
+      "30046"
+    ],
+    "description": "Safe Harbor provides a calm, structured home for siblings so brothers and sisters can stay together during foster care.",
+    "lat": 33.9562,
+    "lng": -83.988,
+    "tone": 1,
+    "needs": [
+      {
+        "id": "n1",
+        "title": "Twin bed sheets",
+        "category": "supplies",
+        "urgent": false,
+        "fulfilled": false,
+        "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/PLACEHOLDER-HARBOR"
+      },
+      {
+        "id": "n2",
+        "title": "Bath towels",
+        "category": "supplies",
+        "urgent": false,
+        "fulfilled": false,
+        "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/PLACEHOLDER-HARBOR"
+      },
+      {
+        "id": "n3",
+        "title": "Sports shoes (youth sizes)",
+        "category": "clothes",
+        "urgent": false,
+        "fulfilled": false,
+        "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/PLACEHOLDER-HARBOR"
+      }
+    ],
+    "opportunities": [
+      {
+        "id": "o1",
+        "title": "Family dinner night cooks",
+        "schedule": "Fridays, 5-7pm",
+        "category": "meals",
+        "description": "Cook a simple dinner with the kids and share the table."
+      }
+    ],
+    "photo": {
+      "url": "https://images.unsplash.com/photo-1723258343563-7d71a55d6dfa",
+      "alt": "Bedroom with bunk beds and a couch",
+      "credit": "Alex Tyson",
+      "creditUrl": "https://unsplash.com/@alextyson195"
+    }
+  },
+  {
+    "id": "grace-home",
+    "name": "Grace Home",
+    "area": "Forsyth County, GA",
+    "county": "Forsyth County",
+    "zips": [
+      "30040",
+      "30041",
+      "30028",
+      "30506"
+    ],
+    "description": "Grace Home is a family-style home with a big backyard and an even bigger love of art. They care for elementary-aged kids and celebrate every milestone.",
+    "lat": 34.247,
+    "lng": -84.09,
+    "tone": 5,
+    "needs": [
+      {
+        "id": "n1",
+        "title": "Winter jackets",
+        "category": "clothes",
+        "urgent": true,
+        "fulfilled": false,
+        "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/PLACEHOLDER-GRACE"
+      },
+      {
+        "id": "n2",
+        "title": "After-school snacks",
+        "category": "food",
+        "urgent": false,
+        "fulfilled": false,
+        "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/PLACEHOLDER-GRACE"
+      },
+      {
+        "id": "n3",
+        "title": "Art supplies",
+        "category": "other",
+        "urgent": false,
+        "fulfilled": false,
+        "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/PLACEHOLDER-GRACE"
+      }
+    ],
+    "opportunities": [
+      {
+        "id": "o1",
+        "title": "Art club volunteer",
+        "schedule": "Mondays, 4-5:30pm",
+        "category": "events",
+        "description": "Lead or assist a simple art project for kids ages 6-10."
+      },
+      {
+        "id": "o2",
+        "title": "Reading buddies",
+        "schedule": "Saturdays, 10-11am",
+        "category": "tutoring",
+        "description": "Read aloud and practice reading with early readers."
+      }
+    ],
+    "photo": {
+      "url": "https://images.unsplash.com/photo-1768167457397-9f7654651f99",
+      "alt": "Wooden swing hanging from a tree in autumn",
+      "credit": "rayne madison",
+      "creditUrl": "https://unsplash.com/@raynemadison"
+    }
+  }
+]
